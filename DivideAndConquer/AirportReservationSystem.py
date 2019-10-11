@@ -11,7 +11,7 @@ Ideas:
     - Search BST for place to insert: O(Lg n)
     - Insert: O(1)
 
-- What landed before t?
+- How many planes landed before t?
     - Walk down tree to find desired time
     - Add in 1 for the nodes that are smaller
     - Add in the sub-tree size to the left of just compared node
@@ -21,6 +21,7 @@ Ideas:
 class TreeNode:
     def __init__(self, x):
         self.val = x
+        self.numOfBelowNodes = 0
         self.left = None
         self.right = None
 
@@ -89,16 +90,29 @@ def traverse_bst(root):
         print(root)
         return
 
-    print(root.val)
+    print(root.val, root.numOfBelowNodes)
     traverse_bst(root.left)
     traverse_bst(root.right)
 
 
+def assign_num_of_below_nodes(node):
+    if not node:
+        return 0
+
+    num_left = assign_num_of_below_nodes(node.left)
+    num_right = assign_num_of_below_nodes(node.right)
+    node.numOfBelowNodes = num_left + num_right + 1
+
+    return node.numOfBelowNodes
+
+
 nums = [42, 60, 65, 70, 80]
 node = build_bst_from_sorted_list(nums)
+
 # traverse_bst(node)
 
 reserve_landing(node, 50, 3)
 reserve_landing(node, 46, 3)
 reserve_landing(node, 41, 3)
+assign_num_of_below_nodes(node)
 traverse_bst(node)
