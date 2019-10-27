@@ -1,5 +1,8 @@
 """
 Problem: https://leetcode.com/problems/course-schedule/
+
+Solution: Basically add all edges to a graph, check if we can do topological sort on this graph by checking is it has
+a cycle in it. If has cycle return False, otherwise return True
 """
 import unittest
 
