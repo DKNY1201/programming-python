@@ -36,7 +36,7 @@ def radix_sort(nums, b):
     return nums
 
 
-class TestMergeSort(unittest.TestCase):
+class Test(unittest.TestCase):
     def test_radix_sort(self):
         nums = [9, 4, 7, 6, 1, 5, 3, 2]
         self.assertEqual(radix_sort(nums, 10), [1, 2, 3, 4, 5, 6, 7, 9], "Should sort list ascending order")
