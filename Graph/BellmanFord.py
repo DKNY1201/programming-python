@@ -1,47 +1,45 @@
-import heapq
 import unittest
+import sys
 
 
-def shortest_path_dijkstra(graph, s):
+def shortest_path_bellman_ford(graph, s):
     """
-        Calculate shortest values and shortest paths from given graph and start vertex using Dijkstra algorithms.
+        Calculate shortest values and shortest paths from given graph and start vertex using Bellman Ford algorithms.
         @:param graph: graph to examine
         @:param s: start point
-        @:return: tuple of shortest values and shortest paths
+        @:return: tuple of shortest values and shortest paths if there is no negative cycle otherwise return None
     """
-    pq = []
-    heapq.heapify(pq)
-    heapq.heappush(pq, (0, s))
+    s_vals = {}
+    s_paths = {}
 
-    s_vals = {s: 0}
-    s_paths = {s: None}
-    visited = set()
+    # initialize data
+    for node in graph.vertexes:
+        s_vals[node] = sys.maxsize
+        s_paths[node] = None
 
-    while pq:
-        min = heapq.heappop(pq)
-        min_dist = min[0]
-        min_node = min[1]
+    s_vals[s] = 0
 
-        # no need to examine visited node. This happen because we don't have properly decrease key func in
-        # priority queue. We just add decreased key to pq
-        if min_node in visited:
-            continue
+    # updated all edges |V| - 1 times
+    for i in range(len(graph.vertexes)):
+        is_any_edge_updated = False
 
-        visited.add(min_node)
+        for edge in graph.edges:
+            src, dest, weight = edge["src"], edge["dest"], edge["weight"]
 
-        for neighbor in graph.adj_list[min_node]:
-            neighbor_node = neighbor[0]
-            neighbor_dist = neighbor[1]
+            if s_vals[dest] > s_vals[src] + weight:
+                is_any_edge_updated = True
+                s_vals[dest] = s_vals[src] + weight
+                s_paths[dest] = src
 
-            if neighbor_node in visited:
-                continue
+        if not is_any_edge_updated:
+            break
 
-            dist_from_min_node = min_dist + neighbor_dist
+    # check for negative cycle in graph
+    for edge in graph.edges:
+        src, dest, weight = edge["src"], edge["dest"], edge["weight"]
 
-            if neighbor_node not in s_vals or dist_from_min_node < s_vals[neighbor_node]:
-                s_vals[neighbor_node] = dist_from_min_node
-                heapq.heappush(pq, (dist_from_min_node, neighbor_node))
-                s_paths[neighbor_node] = min_node
+        if s_vals[src] + weight < s_vals[dest]:
+            return None
 
     return s_vals, s_paths
 
@@ -49,6 +47,7 @@ def shortest_path_dijkstra(graph, s):
 class Graph:
     def __init__(self):
         self.adj_list = {}
+        self.edges = []
         self.vertexes = set()
 
     def add_edge(self, u, v, w):
@@ -56,6 +55,11 @@ class Graph:
             self.adj_list[u] = []
 
         self.adj_list[u].append((v, w))
+        self.edges.append({
+            "src": u,
+            "dest": v,
+            "weight": w
+        })
         self.vertexes.add(u)
         self.vertexes.add(v)
 
@@ -94,8 +98,7 @@ class Test(unittest.TestCase):
         graph.add_edge("I", "C", 2)
         graph.add_edge("I", "H", 7)
         graph.add_edge("I", "G", 6)
-        s_vals, s_paths = shortest_path_dijkstra(graph, "A")
-
+        s_vals, s_paths = shortest_path_bellman_ford(graph, "A")
         expected_s_vals = {
             "A": 0,
             "B": 4,
@@ -107,7 +110,6 @@ class Test(unittest.TestCase):
             "H": 8,
             "I": 14,
         }
-
         expected_s_paths = {
             "A": None,
             "B": "A",
@@ -119,7 +121,6 @@ class Test(unittest.TestCase):
             "H": "A",
             "I": "C",
         }
-
         self.assertEqual(expected_s_vals, s_vals, "Should return correct shortest values")
         self.assertEqual(expected_s_paths, s_paths, "Should return correct shortest paths")
 
@@ -127,23 +128,7 @@ class Test(unittest.TestCase):
         graph1.add_edge("A", "B", 1)
         graph1.add_edge("B", "C", 2)
         graph1.add_edge("C", "E", 1)
-        graph1.add_edge("C", "D", 1)
+        graph1.add_edge("C", "D", -4)
         graph1.add_edge("D", "B", 1)
-        graph1.add_vertex("E")
-        s_vals1, s_paths1 = shortest_path_dijkstra(graph1, "A")
-        expected_s_vals1 = {
-            "A": 0,
-            "B": 1,
-            "C": 3,
-            "D": 4,
-            "E": 4,
-        }
-        expected_s_paths1 = {
-            "A": None,
-            "B": "A",
-            "C": "B",
-            "D": "C",
-            "E": "C",
-        }
-        self.assertEqual(expected_s_vals1, s_vals1, "Should return correct shortest values")
-        self.assertEqual(expected_s_paths1, s_paths1, "Should return correct shortest paths")
+        self.assertEqual(None, shortest_path_bellman_ford(graph1, "A"),
+                         "Should return None if graph contains negative cycle")
