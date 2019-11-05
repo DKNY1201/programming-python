@@ -51,6 +51,10 @@ class Router:
 
 
 def get_critical_routers(num_routers, links):
+    """
+    Idea is loop through all routers. For each loop start from any router, run the DFS and prevent current router.
+    Check for number of visited routers, if it is less than number of (all routers - 1) then it is critical router
+    """
     if not num_routers:
         return []
 
