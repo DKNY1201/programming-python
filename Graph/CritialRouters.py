@@ -201,7 +201,7 @@ class Test(unittest.TestCase):
         graph.add_edge(5, 6)
         graph.add_edge(6, 7)
         graph.add_edge(5, 7)
-        self.assertEqual(sorted([2, 3, 5]), sorted(graph.find_critical_router_tarjan()),
+        self.assertEqual([2, 3, 5], sorted(graph.find_critical_router_tarjan()),
                          "Should return correct list of critical routers")
 
         graph = Graph(6)
@@ -212,7 +212,7 @@ class Test(unittest.TestCase):
         graph.add_edge(2, 5)
         graph.add_edge(5, 6)
         graph.add_edge(3, 4)
-        self.assertEqual(sorted([2, 3, 5]), sorted(graph.find_critical_router_tarjan()),
+        self.assertEqual([2, 3, 5], sorted(graph.find_critical_router_tarjan()),
                          "Should return correct list of critical routers")
 
         graph = Graph(5)
@@ -220,7 +220,7 @@ class Test(unittest.TestCase):
         graph.add_edge(1, 2)
         graph.add_edge(2, 3)
         graph.add_edge(3, 4)
-        self.assertEqual(sorted([1, 2, 3]), sorted(graph.find_critical_router_tarjan()),
+        self.assertEqual([1, 2, 3], sorted(graph.find_critical_router_tarjan()),
                          "Should return correct list of critical routers when all routers are on a line")
 
         graph = Graph(2)
