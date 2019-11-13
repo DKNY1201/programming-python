@@ -48,7 +48,7 @@ import unittest
 def get_closes_pairs_to_target(a, b, target):
     """
     Using 2 pointers technique to run from left of a and from right of b
-    Store pairs in a dictionary, keep track closest_to_target. Return dict[closest_to_target
+    Store pairs in a dictionary, keep track closest_to_target. Return dict[closest_to_target]
     T(n): O(m + n)
     """
     if not a or not b:
