@@ -58,7 +58,7 @@ class Graph:
                 # after examine its children, update lows of current vertex
                 lows[u] = min(lows[u], lows[v])
 
-                if lows[u] < lows[v]:
+                if ids[u] < lows[v]:
                     res.append((u, v))
 
             elif v != parents[u]:
@@ -113,3 +113,15 @@ class Test(unittest.TestCase):
         tuples = graph.find_critical_bridges_tarjan()
         self.assertEqual([], sorted(tuples, key=lambda tup: tup[0]),
                          "Should return empty list of critical bridges when there is no island")
+
+        graph = Graph(6)
+        graph.add_edge(0, 1)
+        graph.add_edge(0, 2)
+        graph.add_edge(1, 2)
+        graph.add_edge(1, 3)
+        graph.add_edge(1, 4)
+        graph.add_edge(3, 5)
+        graph.add_edge(5, 4)
+        tuples = graph.find_critical_bridges_tarjan()
+        self.assertEqual([], tuples,
+                         "Should return empty list when there is no critical bridge")
