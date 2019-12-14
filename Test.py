@@ -1,4 +1,5 @@
-a = [1,2,3]
-print(a.index(1))
-print(a.index(2))
-print(a.index(3))
+n = 900
+n %= 1000 - 920
+print(n)
+print(900%80)
+print(1000%80)
