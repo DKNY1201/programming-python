@@ -2,7 +2,10 @@
 Problem: https://leetcode.com/problems/course-schedule/
 
 Solution: Basically add all edges to a graph, check if we can do topological sort on this graph by checking is it has
-a cycle in it. If has cycle return False, otherwise return True
+a cycle in it. If has cycle return False, otherwise return True.
+
+We introduce a "path" that stores nodes are on the path we're examining. If we see that node again then we can decide
+there is a cycle.
 """
 import unittest
 
