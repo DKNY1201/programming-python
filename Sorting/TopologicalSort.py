@@ -1,5 +1,14 @@
 import unittest
 
+"""
+Graph must be a DAG (directed acyclic graph), basically a directed graph with no cycle
+1. Start with a random node in graph
+2. Go to the end of the path that starts from above node. If current node has no un-visited adjacent nodes then add it 
+to the stack. Doing this will make sure node that has no dependent nodes on it is added to stack.
+3. Repeat step 1, 2 until no un-visited nodes
+4. Return reversed stack
+"""
+
 
 class Graph:
     def __init__(self):
