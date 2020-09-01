@@ -1,16 +1,46 @@
-def numRollsToTarget(d: int, f: int, target: int) -> int:
-    dp = [[0] * (target + 1) for i in range(d + 1)]
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-    for i in range(1, d + 1):
-        for j in range(target + 1):
-            if j == 0:
-                dp[i][j] = 0
-            elif i == 1:
-                if j <= f:
-                    dp[i][j] = 1
+class Solution:
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
+        node1 = node = self.find_node(root, key)
+        print(node.val)
+        if not node:
+            return root
+
+        while node:
+            if not node.left and not node.right:
+                node = None
+            elif node.left:
+                node.val = node.left.val
+                node = node.left
             else:
-                dp[i][j] = dp[i][j - 1] + dp[i - 1][j - 1] - (dp[i - 1][j - f - 1] if j > f else 0)
+                node.val = node.right.val
+                node = node.right
 
-    return dp[d][target]
+        return root
 
-print(numRollsToTarget(4,6,10))
+    def find_node(self, root, key):
+        while root:
+            if root.val == key:
+                return root
+            elif root.val < key:
+                root = root.right
+            else:
+                root = root.left
+
+        return None
+
+root = TreeNode(5)
+root.left = TreeNode(3)
+root.right = TreeNode(6)
+root.left.left = TreeNode(2)
+root.left.right = TreeNode(4)
+root.right.right = TreeNode(7)
+
+s = Solution()
+s.deleteNode(root, 3)
