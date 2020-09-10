@@ -1,46 +1,45 @@
-# Definition for a binary tree node.
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+# def like(n):
+#     while n >= 0:
+#         s = str(n)
+#         isSastify = True
+#
+#         for i in range(len(s) - 1):
+#             if s[i] >= s[i + 1]:
+#                 isSastify = False
+#                 break
+#
+#         if isSastify:
+#             return n
+#
+#         n -= 1
+#
+#     return 0
+#
+#
+# print(like(500))
 
-class Solution:
-    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
-        node1 = node = self.find_node(root, key)
-        print(node.val)
-        if not node:
-            return root
 
-        while node:
-            if not node.left and not node.right:
-                node = None
-            elif node.left:
-                node.val = node.left.val
-                node = node.left
-            else:
-                node.val = node.right.val
-                node = node.right
+def get_team_lead_name(names):
+    team_lead_names = []
+    max_len = float("-Inf")
 
-        return root
+    for name in names:
+        unique_letters = set()
 
-    def find_node(self, root, key):
-        while root:
-            if root.val == key:
-                return root
-            elif root.val < key:
-                root = root.right
-            else:
-                root = root.left
+        for letter in name:
+            if letter != " ":
+                unique_letters.add(letter.lower())
 
-        return None
+        if len(unique_letters) > max_len:
+            max_len = len(unique_letters)
+            team_lead_names = [name]
+        elif len(unique_letters) == max_len:
+            team_lead_names.append(name)
 
-root = TreeNode(5)
-root.left = TreeNode(3)
-root.right = TreeNode(6)
-root.left.left = TreeNode(2)
-root.left.right = TreeNode(4)
-root.right.right = TreeNode(7)
+    team_lead_names.sort()
 
-s = Solution()
-s.deleteNode(root, 3)
+    return team_lead_names[0]
+
+names = ["kylan charles", "raymond strickland", "julissa shepard", "andrea meza", "destiney alvarado"]
+names = ["kylan charles", "raymond strickland1", "julissa shepard", "andrea meza", "destiney alvarado", "raymond strickland2"]
+print(get_team_lead_name(names))
