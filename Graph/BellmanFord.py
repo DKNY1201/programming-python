@@ -12,29 +12,33 @@ def shortest_path_bellman_ford(graph, s):
     s_vals = {}
     s_paths = {}
 
-    # initialize data
+    # All nodes will have Infinity distance at first since we don't know we can reach to them yet. Start node distance
+    # is 0 since we already on it
     for node in graph.vertexes:
         s_vals[node] = sys.maxsize
         s_paths[node] = None
-
     s_vals[s] = 0
 
-    # updated all edges |V| - 1 times
+    # updated all edges V (number of vertexes) times
+    # we need to run V times because we examine edges in randomize order. In some cases we will run from Infinity cost
+    # node to another Infinity cost node so run in V times will make sure all nodes in s_vals will have correct cost
     for i in range(len(graph.vertexes)):
-        is_any_edge_updated = False
+        is_any_distance_updated = False
 
         for edge in graph.edges:
             src, dest, weight = edge["src"], edge["dest"], edge["weight"]
 
             if s_vals[dest] > s_vals[src] + weight:
-                is_any_edge_updated = True
+                is_any_distance_updated = True
                 s_vals[dest] = s_vals[src] + weight
                 s_paths[dest] = src
 
-        if not is_any_edge_updated:
+        # if no distance was updated so we already have best distances for all nodes
+        if not is_any_distance_updated:
             break
 
-    # check for negative cycle in graph
+    # check for negative cycle in graph.
+    # the s_paths in above loop presume we got the shortest path. If we can update any path then we find negative cycle
     for edge in graph.edges:
         src, dest, weight = edge["src"], edge["dest"], edge["weight"]
 
